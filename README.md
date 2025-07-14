@@ -23,10 +23,15 @@ Note: Gunshot deaths are partially verified.
 Project Structure
 
 index.html: Main dashboard file.
+
 images/Demo_pie.png: Demographic pie chart.
+
 resources/: OpenLayers, QGIS2Web scripts, and styles.
+
 layers/: Kenya and county GeoJSON data.
+
 styles/: Choropleth styling (Blues ramp).
+
 
 How to View Locally
 
