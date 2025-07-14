@@ -30,7 +30,7 @@ resources/: OpenLayers, QGIS2Web scripts, and styles.
 
 layers/: Kenya and county GeoJSON data.
 
-styles/: Choropleth styling (Blues ramp).
+styles/: Choropleth styling (Reds ramp).
 
 
 How to View Locally
