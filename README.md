@@ -35,7 +35,7 @@ styles/: Choropleth styling (Reds ramp).
 
 How to View Locally
 
-Clone the repository:git clone [https://github.com/ThRiFt-BORG/saba-saba-2025-dashboard.git]
+Clone the repository:git clone https://github.com/ThRiFt-BORG/SabaSaba
 (https://thrift-borg.github.io/SabaSaba/)
 
 
