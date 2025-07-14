@@ -1,7 +1,10 @@
 Saba Saba 2025 Fatalities Dashboard
 Overview
 This web GIS dashboard visualizes fatalities from the Saba Saba 2025 protests in Kenya. It features a choropleth map showing deaths per county (e.g., Kiambu: 8) using a Blues color ramp (0, 1–2, 3–4, 5–6, 7–8 fatalities). A sidebar summarizes 38 fatalities, ≥130 injuries, 14 confirmed gunshot deaths, and demographics (4 female, 2 children), with a pie chart for demographic distribution. Interactive pop-ups provide county details and source links. The project aims to raise awareness of human rights impacts with a neutral, ethical presentation.
+
 View Live Dashboard
+
+https://thrift-borg.github.io/SabaSaba/
 
 Tools and Plugins
 
@@ -26,7 +29,7 @@ styles/: Choropleth styling (Blues ramp).
 
 How to View Locally
 
-Clone the repository:git clone https://github.com/your-username/saba-saba-2025-dashboard.git
+Clone the repository:git clone https://github.com/ThRiFt-BORG/saba-saba-2025-dashboard.git
 
 
 Open index.html in a browser.
