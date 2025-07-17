@@ -1,174 +1,171 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta http-equiv="Cache-Control" content="max-age=3600">
-        <link rel="stylesheet" href="./resources/ol.css">
-        <link rel="stylesheet" href="resources/fontawesome-all.min.css">
-        <link href="resources/photon-geocoder-autocomplete.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
-        <link rel="stylesheet" href="./resources/qgis2web.css">
-        <style>
-        html, body {
-            background-color: #ffffff;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Saba Saba 2025 Fatalities Dashboard</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- OpenLayers CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.3.0/ol.css" />
+    <!-- Chart.js CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js"></script>
+    <style>
+        html, body, #map {
+            height: 100%;
+            width: 100%;
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
         }
-        #map {
-            width: calc(100% - 320px); /* Adjust for sidebar width */
-            height: 100%;
-            position: absolute;
-            left: 320px; /* Sidebar width + padding */
-            top: 0;
-        }
-        .ol-control > * {
-            background-color: #f8f8f8 !important;
-            color: #444444 !important;
-            border-radius: 0px;
-        }
-        .ol-attribution a, .gcd-gl-input::placeholder, .search-layer-input-search::placeholder {
-            color: #444444 !important;
-        }
-        .search-layer-input-search {
-            background-color: #f8f8f8 !important;
-        }
-        .ol-control > *:focus, .ol-control > *:hover {
-            background-color: rgba(248, 248, 248, 0.7) !important;
-        } 
-        .ol-control {
-            background-color: rgba(255,255,255,.4) !important;
-            padding: 2px !important;
-        } 
-        .ol-popup {
-            background: white;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-        }
-        .ol-popup-closer {
-            text-decoration: none;
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 16px;
-            color: #444;
-        }
-        .ol-popup a {
-            color: #0066cc;
-            text-decoration: underline;
-        }
-        .ol-legend {
-            background: white;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
+        #sidebar {
             position: absolute;
             top: 10px;
-            right: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            left: 10px;
+            width: 300px;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
             z-index: 1000;
+            font-family: Arial, sans-serif;
         }
-        .ol-legend h4 {
-            margin: 0 0 10px;
-            font-size: 16px;
-            color: #333;
+        #pie-chart {
+            max-width: 250px;
+            margin: 10px auto;
         }
-        .ol-legend ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>Saba Saba 2025 Fatalities</h2>
+        <p><strong>Total Fatalities:</strong> 38</p>
+        <p><strong>Injuries:</strong> ≥130</p>
+        <p><strong>Gunshot Deaths:</strong> 14</p>
+        <p><strong>Demographics:</strong></p>
+        <ul>
+            <li>Female: 4 (10.53%)</li>
+            <li>Children: 2 (5.26%)</li>
+            <li>Others: 32 (84.21%)</li>
+        </ul>
+        <canvas id="pie-chart"></canvas>
+        <p><small>Source: KNCHR 3rd Update (July 8–12, 2025), Media, Social Media</small></p>
+        <p><small>Contact: <a href="mailto:info@knchr.org">info@knchr.org</a></small></p>
+    </div>
+    <div id="map"></div>
+
+    <!-- OpenLayers JS -->
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.3.0/dist/ol.js"></script>
+    <script>
+        // Define choropleth style function
+        function getChoroplethStyle(feature) {
+            const fatalities = feature.get('fatalities') || 0;
+            let fillColor;
+            if (fatalities === 0) fillColor = '#F7FBFF';
+            else if (fatalities <= 2) fillColor = '#DEEBF7';
+            else if (fatalities <= 4) fillColor = '#9ECAE1';
+            else if (fatalities <= 6) fillColor = '#6BAED6';
+            else fillColor = '#2171B5'; // 7–8 fatalities
+
+            return new ol.style.Style({
+                fill: new ol.style.Fill({ color: fillColor }),
+                stroke: new ol.style.Stroke({ color: '#808080', width: 1 }) // Grey borders
+            });
         }
-        .ol-legend li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        .ol-legend .legend-color {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-        }
-        @media screen and (max-width: 600px) {
-            #map {
-                width: 100%;
-                left: 0;
+
+        // Highlight style for hover
+        const highlightStyle = new ol.style.Style({
+            fill: new ol.style.Fill({ color: 'rgba(255, 255, 0, 0.3)' }), // Yellow highlight
+            stroke: new ol.style.Stroke({ color: '#000000', width: 2 }) // Thicker black border
+        });
+
+        // GeoJSON layer
+        const vectorSource = new ol.source.Vector({
+            url: 'layers/kenya_counties.json', // Adjust path to your GeoJSON
+            format: new ol.format.GeoJSON()
+        });
+
+        const vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: getChoroplethStyle
+        });
+
+        // Map initialization
+        const map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM() // OpenStreetMap base layer
+                }),
+                vectorLayer
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([37.9083, -0.0236]), // Center on Kenya
+                zoom: 6
+            })
+        });
+
+        // Hover interaction
+        const selectInteraction = new ol.interaction.Select({
+            condition: ol.events.condition.pointerMove,
+            style: highlightStyle
+        });
+        map.addInteraction(selectInteraction);
+
+        // Pop-up for county details
+        const popup = new ol.Overlay({
+            element: document.createElement('div'),
+            autoPan: true,
+            autoPanAnimation: { duration: 250 }
+        });
+        popup.element.style.backgroundColor = 'white';
+        popup.element.style.padding = '10px';
+        popup.element.style.border = '1px solid #ccc';
+        map.addOverlay(popup);
+
+        map.on('pointermove', function (evt) {
+            const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+                return feature;
+            });
+            if (feature) {
+                const coordinates = evt.coordinate;
+                const name = feature.get('name') || 'Unknown';
+                const fatalities = feature.get('fatalities') || 0;
+                popup.element.innerHTML = `<b>${name}</b><br>Fatalities: ${fatalities}`;
+                popup.setPosition(coordinates);
+            } else {
+                popup.setPosition(undefined);
             }
-            div[style*="position: absolute; top: 10px; left: 10px"] {
-                width: 100%;
-                left: 0;
-                top: auto;
-                bottom: 0;
-                max-height: 50vh;
-                overflow-y: auto;
+        });
+
+        // Interactive pie chart with Chart.js
+        const ctx = document.getElementById('pie-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Female', 'Children', 'Others'],
+                datasets: [{
+                    data: [4, 2, 32], // 4 female, 2 children, 32 others
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                    borderColor: '#808080', // Grey borders for pie chart
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(2);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
             }
-            .ol-legend {
-                top: auto;
-                bottom: 60vh; /* Above sidebar on mobile */
-                right: 10px;
-            }
-        }
-        </style>
-        <title>Saba Saba 2025 Related Deaths per County</title>
-    </head>
-    <body>
-        <div id="map">
-            <div id="popup" class="ol-popup">
-                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-                <div id="popup-content"></div>
-            </div>
-        </div>
-        <div style="position: absolute; top: 10px; left: 10px; width: 300px; max-width: 90%; background: white; padding: 15px; border: 1px solid #ccc; font-family: Arial; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 1000; overflow-y: auto; max-height: 80vh;">
-            <h2>Saba Saba 2025 Dashboard</h2>
-            <!-- Infographics Section -->
-            <h3>Summary</h3>
-            <p><b>Total Fatalities:</b> 38<br>
-               <b>Total Injuries:</b> ≥130<br>
-               <b>Confirmed Gunshot Deaths:</b> 14<br>
-               <b>Demographics:</b> 4 Female, 2 Children<br>
-               <b>Contact:</b> <a href="mailto:info@knchr.org" aria-label="Email KNCHR for more information">info@knchr.org</a></p>
-            <p><i>Data sourced from KNCHR 3rd Update (July 8–12, 2025), media (The Star, Daily Nation, Citizen TV, NTV Kenya, Nation Africa), and social media (Facebook, Instagram). Gunshot deaths partially verified.</i></p>
-            <!-- Pie Chart -->
-            <h3>Demographic Distribution</h3>
-            <img src="images/Demo_pie.png" alt="Pie chart showing demographic distribution of Saba Saba 2025 fatalities: 4 female (10.5%), 2 children (5.3%), 32 other (84.2%)" style="width: 100%; margin-bottom: 10px;">
-            <p style="font-size: 12px; color: #666;"><i>Chart shows 4 female (10.5%), 2 children (5.3%), and 32 other (84.2%) fatalities.</i></p>
-            <!-- Links Section -->
-            <h3>Sources</h3>
-            <ul style="list-style-type: none; padding: 0;">
-                <li><b>Official Reports</b></li>
-                <li><a href="https://www.knchr.org/Articles/ArtMID/2432/ArticleID/1234/KNCHR-3-RD-UPDATE-ON-THE-SABA-SABA-DEMONSTRATIONS" target="_blank" aria-label="KNCHR 3rd Update Report">KNCHR 3rd Update (July 8–12, 2025)</a></li>
-                <li><b>News Articles</b></li>
-                <li><a href="https://www.the-star.co.ke/news/2025-07-08-kiambu-families-mourn-6-killed-in-saba-saba-protests" target="_blank" aria-label="The Star article on Kiambu fatalities">The Star: Kiambu Fatalities</a></li>
-                <li><a href="https://nation.africa/kenya/news/saba-saba-ten-deaths-29-injuries-reported-during-protests--5109780" target="_blank" aria-label="Daily Nation protest overview">Daily Nation: Protest Overview</a></li>
-                <li><a href="https://www.citizentv.co.ke/news/saba-saba-protests-14-confirmed-dead-130-injured-2025/" target="_blank" aria-label="Citizen TV national summary">Citizen TV: National Summary</a></li>
-                <li><a href="https://ntvkenya.co.ke/news/saba-saba-death-12-year-old-girl-killed-by-bullet-inside-family-home-in-kiambu/" target="_blank" aria-label="NTV Kenya Kiambu child fatality">NTV Kenya: Kiambu Child Fatality</a></li>
-                <li><b>Social Media</b></li>
-                <li><a href="https://www.facebook.com/100063678495817/videos/a-family-in-kariobangi-oloolua-ward-kajiado-north-in-pain-after-losing-a-kin-dur/1245904893476141/" target="_blank" aria-label="Facebook Kajiado family testimony">Facebook: Kajiado Family Testimony</a></li>
-                <li><a href="https://www.instagram.com/p/DMAaLAsMVjX/" target="_blank" aria-label="Citizen tv Kenya post">Instagram: Amnesty Kenya Post</a></li>
-            </ul>
-        </div>
-        <script src="resources/qgis2web_expressions.js"></script>
-        <script src="./resources/functions.js"></script>
-        <script src="./resources/ol.js"></script>
-        <script src="./resources/ol-layerswitcher.js"></script>
-        <script src="resources/photon-geocoder-autocomplete.min.js"></script>
-        <script src="layers/Kenya_0.js"></script>
-        <script src="layers/KenyanCounties_1.js"></script>
-        <script src="styles/Kenya_0_style.js"></script>
-        <script src="styles/KenyanCounties_1_style.js"></script>
-        <script src="./layers/layers.js" type="text/javascript"></script> 
-        <script src="./resources/Autolinker.min.js"></script>
-        <script src="./resources/qgis2web.js"></script>
-    </body>
+        });
+    </script>
+</body>
 </html>
