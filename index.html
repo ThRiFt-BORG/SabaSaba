@@ -410,10 +410,10 @@
         document.getElementById('map').style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
         
         // Optional: Add a reset view button
-        var resetControl = L.control({position: 'topleft'});
+        var resetControl = L.control({position: 'topright'});
         resetControl.onAdd = function (map) {
             var container = L.DomUtil.create('div', 'reset-control');
-            container.innerHTML = '<button style="background:white; border:1px solid #ccc; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:12px; margin-top:10px;">🏠 Reset View</button>';
+            container.innerHTML = '<button style="background:white; border:1px solid #ccc; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:12px; margin-top:10px;"> Reset View</button>';
             
             container.onclick = function() {
                 map.fitBounds([[-3.219322381696201, 33.63144051616601], [0.8825361255467136, 41.129878728127444]]);

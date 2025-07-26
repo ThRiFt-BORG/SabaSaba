@@ -94,7 +94,7 @@ saba-saba-dashboard/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/saba-saba-dashboard.git
+   git clone https://github.com/ThRiFt-BORG/SabaSaba
    cd saba-saba-dashboard
    ```
 
@@ -129,11 +129,9 @@ saba-saba-dashboard/
 2. Go to Settings → Pages
 3. Select source branch (usually `main`)
 4. Access via `https://yourusername.github.io/saba-saba-dashboard`
+   
+5.This projects live deployment visualized here: `https://thrift-borg.github.io/SabaSaba/`
 
-**Netlify:**
-1. Connect GitHub repository to Netlify
-2. Auto-deploy on commits
-3. Custom domain support available
 
 ##  Data Sources
 
@@ -187,43 +185,5 @@ We welcome contributions to improve this dashboard:
 - Maintain demographic accuracy
 - Timestamp all updates
 
-##  License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-##  Data Sensitivity Notice
-
-This dashboard contains sensitive information about human casualties. The data is presented for:
-- **Educational purposes**
-- **Human rights documentation**
-- **Public awareness**
-- **Accountability and transparency**
-
-Please handle and share this information responsibly.
-
-## 📞 Contact & Support
-
-### Data Inquiries
-- **Kenya National Commission on Human Rights**
-- Email: [info@knchr.org](mailto:info@knchr.org)
-
-### Technical Support
-- **GitHub Issues:** Report bugs and feature requests
-- **Project Maintainer:** [Your Name](mailto:your.email@example.com)
-
-### Media & Press
-For media inquiries about this visualization, please contact KNCHR directly.
-
-##  Acknowledgments
-
-- **Kenya National Commission on Human Rights (KNCHR)** for comprehensive data collection
-- **Journalists and media outlets** for on-ground reporting
-- **Civil society organizations** documenting human rights violations
-- **Families and communities** affected by these events
-- **Open source community** for mapping and visualization tools
-
----
-
-**Last Updated:** July 26, 2025  
 **Data Source:** KNCHR 3rd Update (July 8-12, 2025)  
 **Dashboard Version:** 1.0
