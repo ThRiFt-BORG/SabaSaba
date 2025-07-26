@@ -130,7 +130,7 @@ saba-saba-dashboard/
 3. Select source branch (usually `main`)
 4. Access via `https://yourusername.github.io/saba-saba-dashboard`
    
-5.This projects live deployment visualized here: `https://thrift-borg.github.io/SabaSaba/`
+5.This projects live deployment visualized here: https://thrift-borg.github.io/SabaSaba/
 
 
 ##  Data Sources
